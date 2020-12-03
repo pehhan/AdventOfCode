@@ -7,13 +7,13 @@ class Day1Test {
 
     @Test
     fun testDay1Task1() {
-        val input = FileReader.getResource("day1.txt").lines()
-        println(Task1.findValue(input.map { it.toInt() }))
+        val lines = FileReader.getResource("day1.txt").lines()
+        println("Day 1 Task 1: ${Task1.findValue(lines.map { it.toInt() })}")
     }
 
     @Test
     fun testDay1Task2() {
-        val input = FileReader.getResource("day1.txt").lines()
-        println(Task2.findValue(input.map { it.toInt() }))
+        val lines = FileReader.getResource("day1.txt").lines()
+        println("Day 1 Task 2: ${Task2.findValue(lines.map { it.toInt() })}")
     }
 }

@@ -7,13 +7,13 @@ class Day2Test {
 
     @Test
     fun testDay2Task1() {
-        val input = FileReader.getResource("day2.txt").lines()
-        println("Number of valid passwords: ${Task1.numberOfValidPasswords(input)}")
+        val lines = FileReader.getResource("day2.txt").lines()
+        println("Day 2 Task 1: ${Task1.numberOfValidPasswords(lines)}")
     }
 
     @Test
     fun testDay2Task2() {
-        val input = FileReader.getResource("day2.txt").lines()
-        println("Number of valid passwords: ${Task2.numberOfValidPasswords(input)}")
+        val lines = FileReader.getResource("day2.txt").lines()
+        println("Day 2 Task 2: ${Task2.numberOfValidPasswords(lines)}")
     }
 }

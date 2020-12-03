@@ -7,13 +7,13 @@ class Day3Test {
 
     @Test
     fun testDay3Task1() {
-        val input = FileReader.getResource("day3.txt").lines()
-        println("Number of trees: ${Task1.numberOfTrees(input)}")
+        val lines = FileReader.getResource("day3.txt").lines()
+        println("Day 3 Task 1: ${Task1.numberOfTrees(lines)}")
     }
 
     @Test
     fun testDay3Task2() {
-        val input = FileReader.getResource("day3.txt").lines()
-        println("Number of trees: ${Task2.numberOfTrees(input)}")
+        val lines = FileReader.getResource("day3.txt").lines()
+        println("Day 3 Task 2: ${Task2.numberOfTrees(lines)}")
     }
 }

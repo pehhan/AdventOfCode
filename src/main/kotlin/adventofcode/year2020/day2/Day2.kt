@@ -1,4 +1,4 @@
-package adventofcode.day2
+package adventofcode.year2020.day2
 
 object Task1 {
     fun numberOfValidPasswords(lines: List<String>): Int {

@@ -1,4 +1,4 @@
-package adventofcode.day3
+package adventofcode.year2020.day3
 
 object Task1 {
     fun numberOfTrees(lines: List<String>): Long {

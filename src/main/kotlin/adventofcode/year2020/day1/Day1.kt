@@ -1,4 +1,4 @@
-package adventofcode.day1
+package adventofcode.year2020.day1
 
 object Task1 {
     fun findValue(lines: List<Int>): Int {

@@ -16,6 +16,6 @@ object Task2 {
     }
 
     private fun isPasswordValid(password: String, character: Char, position1: Int, position2: Int): Boolean {
-        return (password[position1] == character).xor(password[position2] == character)
+        return (password[position1] == character) xor (password[position2] == character)
     }
 }

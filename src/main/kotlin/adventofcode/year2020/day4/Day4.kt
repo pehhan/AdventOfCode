@@ -1,6 +1,6 @@
 package adventofcode.year2020.day4
 
-import java.lang.NumberFormatException
+typealias Passport = Map<String, String>
 
 object Task1 {
     fun numberOfValidPassports(input: String): Int {
@@ -21,29 +21,29 @@ object Task2 {
             .count { isPassportValid(it) }
     }
 
-    private fun isPassportValid(map: Map<String, String>): Boolean {
-        return isBirthYearValid(map) && isIssueYearValid(map) && isExpirationYearValid(map) && isHeightValid(map) && isHairColorValid(map) && isEyeColorValid(map) && isPassportIdValid(map)
+    private fun isPassportValid(passport: Passport): Boolean {
+        return isBirthYearValid(passport) && isIssueYearValid(passport) && isExpirationYearValid(passport) && isHeightValid(passport) && isHairColorValid(passport) && isEyeColorValid(passport) && isPassportIdValid(passport)
     }
 
-    private fun isBirthYearValid(map: Map<String, String>): Boolean {
-        return isYearValid(map, "byr", 1920..2002)
+    private fun isBirthYearValid(passport: Passport): Boolean {
+        return isYearValid(passport, "byr", 1920..2002)
     }
 
-    private fun isIssueYearValid(map: Map<String, String>): Boolean {
-        return isYearValid(map, "iyr", 2010..2020)
+    private fun isIssueYearValid(passport: Passport): Boolean {
+        return isYearValid(passport, "iyr", 2010..2020)
     }
 
-    private fun isExpirationYearValid(map: Map<String, String>): Boolean {
-        return isYearValid(map, "eyr", 2020..2030)
+    private fun isExpirationYearValid(passport: Passport): Boolean {
+        return isYearValid(passport, "eyr", 2020..2030)
     }
 
-    private fun isYearValid(map: Map<String, String>, key: String, range: IntRange): Boolean {
-        val year = map[key] ?: return false
+    private fun isYearValid(passport: Passport, key: String, range: IntRange): Boolean {
+        val year = passport[key] ?: return false
         return year.length == 4 && year.isInt() && year.toInt() in range
     }
 
-    private fun isHeightValid(map: Map<String, String>): Boolean {
-        val height = map["hgt"] ?: return false
+    private fun isHeightValid(passport: Passport): Boolean {
+        val height = passport["hgt"] ?: return false
         return when {
             height.endsWith("cm") -> isHeightValid(height.substringBefore("cm"), 150..193)
             height.endsWith("in") -> isHeightValid(height.substringBefore("in"), 59..76)
@@ -55,18 +55,18 @@ object Task2 {
         return height.isInt() && height.toInt() in range
     }
 
-    private fun isHairColorValid(map: Map<String, String>): Boolean {
-        val hairColor = map["hcl"] ?: return false
+    private fun isHairColorValid(passport: Passport): Boolean {
+        val hairColor = passport["hcl"] ?: return false
         return hairColor.matches("#[0-9a-f]{6}".toRegex())
     }
 
-    private fun isEyeColorValid(map: Map<String, String>): Boolean {
-        val eyeColor = map["ecl"] ?: return false
+    private fun isEyeColorValid(passport: Passport): Boolean {
+        val eyeColor = passport["ecl"] ?: return false
         return eyeColor in listOf("amb", "blu", "brn", "gry", "grn", "hzl", "oth")
     }
 
-    private fun isPassportIdValid(map: Map<String, String>): Boolean {
-        val passportId = map["pid"] ?: return false
+    private fun isPassportIdValid(passport: Passport): Boolean {
+        val passportId = passport["pid"] ?: return false
         return passportId.isInt() && passportId.length == 9
     }
 }

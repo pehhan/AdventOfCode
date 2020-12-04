@@ -45,14 +45,14 @@ object Task2 {
     private fun isHeightValid(map: Map<String, String>): Boolean {
         val height = map["hgt"] ?: return false
         return when {
-            height.endsWith("cm") -> isHeightValid(height, "cm", 150..193)
-            height.endsWith("in") -> isHeightValid(height, "in", 59..76)
+            height.endsWith("cm") -> isHeightValid(height.substringBefore("cm"), 150..193)
+            height.endsWith("in") -> isHeightValid(height.substringBefore("in"), 59..76)
             else -> false
         }
     }
 
-    private fun isHeightValid(height: String, measurement: String, range: IntRange): Boolean {
-        return height.substringBefore(measurement).isInt() && height.substringBefore(measurement).toInt() in range
+    private fun isHeightValid(height: String, range: IntRange): Boolean {
+        return height.isInt() && height.toInt() in range
     }
 
     private fun isHairColorValid(map: Map<String, String>): Boolean {
@@ -76,10 +76,5 @@ fun <K, V> Map<K, V>.containsKeys(vararg keys: K): Boolean {
 }
 
 fun String.isInt(): Boolean {
-    return try {
-        toInt()
-        true
-    } catch (exception: NumberFormatException) {
-        false
-    }
+    return toIntOrNull() != null
 }

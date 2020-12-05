@@ -20,22 +20,31 @@ object Task2 {
 }
 
 private fun valueAtPosition0(input: List<Int>, noun: Int, verb: Int): Int {
-    val program = input.toMutableList()
+    return Program(input).run(noun, verb)
+}
 
-    program[1] = noun
-    program[2] = verb
+data class Program(val data: List<Int>) {
 
-    for (i in 0 until program.size step 4) {
-        when (program[i]) {
-            1 -> {
-                program[program[i + 3]] = program[program[i + 1]] + program[program[i + 2]]
+    fun run(noun: Int, verb: Int): Int {
+        val program = data.toMutableList()
+
+        program[1] = noun
+        program[2] = verb
+
+        for (i in 0 until program.size step 4) {
+            when (program[i]) {
+                1 -> {
+                    program[program[i + 3]] = program[program[i + 1]] + program[program[i + 2]]
+                }
+                2 -> {
+                    program[program[i + 3]] = program[program[i + 1]] * program[program[i + 2]]
+                }
+                99 -> break
             }
-            2 -> {
-                program[program[i + 3]] = program[program[i + 1]] * program[program[i + 2]]
-            }
-            99 -> break
         }
-    }
 
-    return program[0]
+        return program[0]
+
+
+    }
 }

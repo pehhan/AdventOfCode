@@ -13,12 +13,9 @@ object Task2 {
     fun sumOfPositiveAnswers(input: String): Int {
         return input
             .split("\n\n")
-            .asSequence()
             .map { it.split("\n") }
-            .map { list -> list.map { str -> str.map { it } } }
-            .map { it.size to it.flatten() }
-            .map { list -> list.first to list.second.groupBy { it }}
-            .map { list -> list.second.filter { it.value.size == list.first } }
+            .map { list -> list.map { it.toSet() } }
+            .map { it.fold(it[0]) { set, n -> set.intersect(n) } }
             .sumOf { it.size }
     }
 }

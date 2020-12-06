@@ -19,11 +19,11 @@ enum class ParameterMode {
 }
 
 sealed class Operation(val steps: Int) {
-    data class AddOperation(val operator1: Parameter, val operator2: Parameter, val address: Parameter) : Operation(4)
-    data class MultiplyOperation(val operator1: Parameter, val operator2: Parameter, val address: Parameter) : Operation(4)
-    data class InputOperation(val address: Parameter) : Operation(2)
-    data class OutputOperation(val address: Parameter) : Operation(2)
-    object TerminateOperation : Operation(0)
+    data class Add(val operator1: Parameter, val operator2: Parameter, val address: Parameter) : Operation(4)
+    data class Multiply(val operator1: Parameter, val operator2: Parameter, val address: Parameter) : Operation(4)
+    data class Input(val address: Parameter) : Operation(2)
+    data class Output(val address: Parameter) : Operation(2)
+    object Terminate : Operation(0)
 }
 
 data class IntCodeProgram(val data: List<Int>) {
@@ -35,11 +35,11 @@ data class IntCodeProgram(val data: List<Int>) {
         while (i < data.size) {
             val operation = parseOperation(program, i)
             when (operation) {
-                is AddOperation -> program[operation.address] = program[operation.operator1] + program[operation.operator2]
-                is MultiplyOperation -> program[operation.address] = program[operation.operator1] * program[operation.operator2]
-                is InputOperation -> program[operation.address] = input
-                is OutputOperation -> println(program[operation.address])
-                TerminateOperation -> break
+                is Add -> program[operation.address] = program[operation.operator1] + program[operation.operator2]
+                is Multiply -> program[operation.address] = program[operation.operator1] * program[operation.operator2]
+                is Input -> program[operation.address] = input
+                is Output -> println(program[operation.address])
+                Terminate -> break
             }
 
             i += operation.steps
@@ -48,11 +48,11 @@ data class IntCodeProgram(val data: List<Int>) {
 
     private fun parseOperation(program: List<Int>, index: Int): Operation {
         return when (program[index]) {
-            1 -> AddOperation(program[index + 1], program[index + 2], program[index + 3])
-            2 -> MultiplyOperation(program[index + 1], program[index + 2], program[index + 3])
-            3 -> InputOperation(program[index + 1])
-            4 -> OutputOperation(program[index + 1])
-            99 -> TerminateOperation
+            1 -> Add(program[index + 1], program[index + 2], program[index + 3])
+            2 -> Multiply(program[index + 1], program[index + 2], program[index + 3])
+            3 -> Input(program[index + 1])
+            4 -> Output(program[index + 1])
+            99 -> Terminate
             else -> parseOperationWithParameters(program, index)
         }
     }
@@ -65,12 +65,12 @@ data class IntCodeProgram(val data: List<Int>) {
                 val operator2 = parameter(program, opCode, index + 2, 3)
                 val address = parameter(program, opCode, index + 3, 4)
 
-                if (parsedOpCode == 1) AddOperation(operator1, operator2, address) else MultiplyOperation(operator1, operator2, address)
+                if (parsedOpCode == 1) Add(operator1, operator2, address) else Multiply(operator1, operator2, address)
             }
             3, 4 -> {
                 val address = parameter(program, opCode, index + 1, 2)
 
-                if (parsedOpCode == 3) InputOperation(address) else OutputOperation(address)
+                if (parsedOpCode == 3) Input(address) else Output(address)
             }
             else -> throw IllegalArgumentException("Unexpected op code: $opCode")
         }
@@ -87,6 +87,6 @@ fun OpCode.digitAtPositionFromEnd(position: Int): Int {
 }
 
 fun OpCode.parameterMode(position: Int): ParameterMode {
-    if (position >= toString().length) return Position
+    if (position >= toString().length) return Position // Counts as 0 in this case which means Position.
     return if (digitAtPositionFromEnd(position) == 0) Position else Immediate
 }

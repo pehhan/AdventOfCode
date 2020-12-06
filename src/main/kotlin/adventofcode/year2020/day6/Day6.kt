@@ -15,7 +15,7 @@ object Task2 {
             .split("\n\n")
             .map { it.split("\n") }
             .map { list -> list.map { it.toSet() } }
-            .map { it.fold(it[0]) { set, n -> set.intersect(n) } }
+            .map { it.fold(it[0]) { set1, set2 -> set1 intersect set2 } }
             .sumOf { it.size }
     }
 }

@@ -23,13 +23,13 @@ object Task2 {
         val bagList = input
             .replace("bags", "bag")
             .replace(".", "")
-            .replace("no", "0")
+            .replace("no", "0") // This would be an issue if we needed to preserve the names of the bags
             .lines()
 
-        return bagsThatContainBag(bagList, bag)
+        return numberOfBagsThatContainBag(bagList, bag)
     }
 
-    private fun bagsThatContainBag(lines: List<String>, bag: String): Int {
+    private fun numberOfBagsThatContainBag(lines: List<String>, bag: String): Int {
         val bagsWithBag = lines.filter { it.firstBagPart().contains(bag) }
         val bagsToFind = bagsWithBag.map { it.secondBagPart() }
 
@@ -42,7 +42,7 @@ object Task2 {
                 .map { it.substringAfter(" ") to it.substringBefore(" ").toInt() }
 
             val currentSum = bagsCountList.map { it.second }.sum()
-            return bagsCountList.fold(currentSum) { sum, entry -> sum + entry.second * bagsThatContainBag(lines, entry.first) }
+            return bagsCountList.fold(currentSum) { sum, bagCount -> sum + bagCount.second * numberOfBagsThatContainBag(lines, bagCount.first) }
         }
     }
 }

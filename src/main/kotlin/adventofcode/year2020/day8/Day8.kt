@@ -6,7 +6,7 @@ import adventofcode.year2020.day8.TerminationMode.Normal
 import java.lang.IllegalArgumentException
 
 enum class Operation {
-    acc, jmp, nop
+    Acc, Jmp, Nop
 }
 
 data class Instruction(val operation: Operation, val argument: Int)
@@ -24,18 +24,18 @@ object Program {
         val visited = mutableListOf<Int>()
 
         while (i < instructions.size) {
-            visited += i
+            if (visited.contains(i)) return Termination(InfiniteLoop, accumulator)
 
-            if (visited.size > visited.toSet().size) return Termination(InfiniteLoop, accumulator)
+            visited += i
 
             val instruction = instructions[i]
             when (instruction.operation) {
-                acc -> {
+                Acc -> {
                     accumulator += instruction.argument
                     i++
                 }
-                jmp -> i += instruction.argument
-                nop -> i++
+                Jmp -> i += instruction.argument
+                Nop -> i++
             }
         }
 
@@ -45,9 +45,9 @@ object Program {
 
 private fun toInstruction(line: String): Instruction {
     val operation = when (line.split(" ")[0]) {
-        "acc" -> acc
-        "jmp" -> jmp
-        "nop" -> nop
+        "acc" -> Acc
+        "jmp" -> Jmp
+        "nop" -> Nop
         else -> throw IllegalArgumentException("Unknown instruction: $line")
     }
 
@@ -70,12 +70,9 @@ object Task2 {
         for (i in instructions.indices) {
             val instruction = instructions[i]
             when (instruction.operation) {
-                jmp -> {
-                    val termination = runModifiedInstructions(instructions, i, instruction, nop)
-                    if (termination.mode == Normal) return termination.accumulator
-                }
-                nop -> {
-                    val termination = runModifiedInstructions(instructions, i, instruction, jmp)
+                Jmp, Nop -> {
+                    val newOperation = if (instruction.operation == Jmp) Nop else Jmp
+                    val termination = runModifiedInstructions(instructions, i, Instruction(newOperation, instruction.argument))
                     if (termination.mode == Normal) return termination.accumulator
                 }
             }
@@ -84,9 +81,9 @@ object Task2 {
         throw IllegalArgumentException("Could not find any instructions that cause normal termination.")
     }
 
-    private fun runModifiedInstructions(instructions: List<Instruction>, index: Int, instruction: Instruction, to: Operation): Termination {
+    private fun runModifiedInstructions(instructions: List<Instruction>, index: Int, instruction: Instruction): Termination {
         val modifiedInstructions = instructions.toMutableList()
-        modifiedInstructions[index] = Instruction(to, instruction.argument)
+        modifiedInstructions[index] = instruction
 
         return Program.run(modifiedInstructions)
     }

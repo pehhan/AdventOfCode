@@ -9,7 +9,7 @@ enum class SeatStatus {
 
 typealias Seating = List<List<SeatStatus>>
 
-private fun toPositionStatus(char: Char): SeatStatus {
+private fun toSeatStatus(char: Char): SeatStatus {
     return when (char) {
         '.' -> Floor
         'L' -> Empty
@@ -77,7 +77,7 @@ object Task2 {
 private fun seatsOccupied(input: String, neighbourLimit: Int, occupiedSeatsFunc: (Seating, Int, Int) -> (Int)): Int {
     var previousStep = input
         .lines()
-        .map { str -> str.map { toPositionStatus(it) } }
+        .map { str -> str.map { toSeatStatus(it) } }
 
     var nextStep = nextStep(previousStep, neighbourLimit, occupiedSeatsFunc)
 

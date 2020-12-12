@@ -83,7 +83,7 @@ private fun seatsOccupied(input: String, neighbourLimit: Int, occupiedSeatsFunc:
 
     while (previousStep != nextStep) {
         previousStep = nextStep
-        nextStep = nextStep(nextStep, neighbourLimit, occupiedSeatsFunc)
+        nextStep = nextStep(previousStep, neighbourLimit, occupiedSeatsFunc)
     }
 
     return nextStep.flatten().count { it == Occupied }
@@ -113,6 +113,5 @@ private fun nextStep(seating: Seating, neighbourLimit: Int, occupiedSeatsFunc: (
 }
 
 private fun withinBounds(seating: Seating, x: Int, y: Int, diffX: Int, diffY: Int): Boolean {
-    if (x + diffX >= 0 && x + diffX < seating.size && y + diffY >= 0 && y + diffY < seating[x].size) return true
-    return false
+    return x + diffX >= 0 && x + diffX < seating.size && y + diffY >= 0 && y + diffY < seating[x].size
 }

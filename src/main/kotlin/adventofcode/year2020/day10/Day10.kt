@@ -18,7 +18,6 @@ object Task2 {
             .lines()
             .map { it.toInt() }
             .sorted()
-            .let { it + (it.last() + 3) }
 
         val solutions = joltages.fold(mapOf(0 to 1L)) { map, joltage ->
             map + (joltage to (map[joltage - 1] ?: 0) + (map[joltage - 2] ?: 0) + (map[joltage - 3] ?: 0))

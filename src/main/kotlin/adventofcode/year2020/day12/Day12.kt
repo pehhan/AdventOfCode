@@ -83,13 +83,11 @@ object Task2 {
         var x = position.x
         var y = position.y
         var tempX = x
-        var degrees = instruction.value
 
-        while (degrees > 0) {
+        for (i in 0 until instruction.value / 90) {
             x = if (instruction.action == TurnLeft) -y else y
             y = if (instruction.action == TurnLeft) tempX else -tempX
             tempX = x
-            degrees -= 90
         }
 
         return Position(x, y)

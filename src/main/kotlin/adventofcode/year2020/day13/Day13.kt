@@ -41,7 +41,7 @@ object Task2 {
         for (bus in buses.drop(1)) {
             // Find the first matching timestamp for the n:th bus.
             // To optimize and not have to check every possible timestamp,
-            // we only check the timestamps that are actually possible.
+            // we only check the timestamps that are actual candidates.
             while ((timestamp + bus.timestamp) % bus.id != 0L) {
                 timestamp += step
             }

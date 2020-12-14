@@ -75,10 +75,10 @@ object Task2 {
     }
 }
 
-fun Long.toBinaryFromDecimal(bits: Int = 36): String {
+private fun Long.toBinaryFromDecimal(bits: Int = 36): String {
     return java.lang.Long.toBinaryString(this).padStart(bits, '0')
 }
 
-fun String.toDecimalFromBinary(): Long {
+private fun String.toDecimalFromBinary(): Long {
     return java.lang.Long.parseLong(this, 2)
 }

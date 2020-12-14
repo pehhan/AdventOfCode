@@ -46,7 +46,7 @@ object Task1 {
                         when (instruction.action) {
                             TurnOn -> grid[x][y] = On
                             TurnOff -> grid[x][y] = Off
-                            Toggle -> grid[x][y] = if (initialGrid[x][y] == On) Off else On
+                            Toggle -> grid[x][y] = if (grid[x][y] == On) Off else On
                         }
                     }
                 }

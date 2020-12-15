@@ -18,7 +18,7 @@ object Task1 {
             }
         }
 
-        return memory.toList().sumOf { it.second }
+        return memory.values.sum()
     }
 
     private fun applyMask(mask: String, value: Long): Long {
@@ -49,7 +49,7 @@ object Task2 {
             }
         }
 
-        return memory.toList().sumOf { it.second }
+        return memory.values.sum()
     }
 
     private fun applyMask(memory: Memory, mask: String, address: Long, value: Long) {
@@ -76,7 +76,7 @@ object Task2 {
 }
 
 private fun Long.toBinaryFromDecimal(bits: Int = 36): String {
-    return java.lang.Long.toBinaryString(this).padStart(bits, '0')
+    return toString(2).padStart(bits, '0')
 }
 
 private fun String.toDecimalFromBinary(): Long {

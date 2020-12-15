@@ -1,7 +1,6 @@
 package adventofcode.year2015.day7
 
 import adventofcode.year2015.day7.Instruction.*
-import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 
 typealias Wire = String
@@ -76,8 +75,6 @@ object Task2 {
         if (instruction != null) {
             instructions.remove(instruction)
             instructions.add(ProvideSignalValue(originalValueToA, "b"))
-        } else {
-            throw IllegalArgumentException("Could not find b")
         }
 
         return signalToWireA(instructions)

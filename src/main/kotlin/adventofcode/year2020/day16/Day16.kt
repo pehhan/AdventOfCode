@@ -1,6 +1,11 @@
 package adventofcode.year2020.day16
 
-data class Rule(val name: String, val ranges: List<IntRange>)
+data class Rule(val name: String, val ranges: List<IntRange>) {
+
+    operator fun contains(number: Int): Boolean {
+        return ranges.any { range -> range.contains(number) }
+    }
+}
 
 object Task1 {
     fun errorRate(input: String): Int {
@@ -9,11 +14,9 @@ object Task1 {
 
         return nearbyTickets
             .lines()
-            .asSequence()
             .drop(1)
             .map { it.split(",") }
-            .map { list -> list.map { it.toInt() } }
-            .flatten()
+            .flatMap { list -> list.map { it.toInt() } }
             .filterNot { isNumberInAnyRuleRange(it, rules) }
             .sum()
     }
@@ -24,17 +27,22 @@ object Task2 {
         val (rawRules, myTicket, nearbyTickets) = input.split("\n\n")
         val rules = parseRules(rawRules)
 
-        val validTickets = nearbyTickets.lines()
+        val validTickets = nearbyTickets
+            .lines()
             .drop(1)
             .map { it.split(",") }
             .map { list -> list.map { it.toInt() } }
             .filter { list -> list.all { isNumberInAnyRuleRange(it, rules) } }
 
-        val rowRuleMap = createRowRuleMap(validTickets, rules)
-        val filteredRowRules = rowRuleMap.filter { it.value.name.startsWith("departure") }
-        val myInts = myTicket.lines()[1].split(",").map { it.toLong() }
+        val myInts = myTicket
+            .lines()[1]
+            .split(",")
+            .map { it.toLong() }
 
-        return filteredRowRules.toList().fold(1L) {product, rowRule -> product * myInts[rowRule.first] }
+        return createRowRuleMap(validTickets, rules)
+            .filter { it.value.name.startsWith("departure") }
+            .toList()
+            .fold(1L) { product, rowRule -> product * myInts[rowRule.first] }
     }
 
     private fun createRowRuleMap(validTickets: List<List<Int>>, rules: List<Rule>): Map<Int, Rule> {
@@ -52,8 +60,8 @@ object Task2 {
                 val matchingRules = findMatchingRulesForRows(row.second, remainingRules)
 
                 if (matchingRules.size == 1) {
-                    rowRuleMap[row.first] = matchingRules[0]
-                    remainingRules.remove(matchingRules[0])
+                    rowRuleMap[row.first] = matchingRules.first()
+                    remainingRules.remove(matchingRules.first())
                     iterator.remove()
                 }
             }
@@ -63,7 +71,7 @@ object Task2 {
     }
 
     private fun findMatchingRulesForRows(rows: List<Int>, rules: List<Rule>): List<Rule> {
-        return rules.filter { rule -> rows.all { number -> rule.ranges.any { range -> range.contains(number) } } }
+        return rules.filter { rule -> rows.all { number -> number in rule } }
     }
 }
 
@@ -80,7 +88,7 @@ private fun parseRules(input: String): List<Rule> {
 }
 
 private fun isNumberInAnyRuleRange(number: Int, rules: List<Rule>): Boolean {
-    return rules.any { it.ranges.any { range -> range.contains(number) } }
+    return rules.any { number in it }
 }
 
 private fun <T> List<List<T>>.transposedWithIndex(): List<Pair<Int, List<T>>> {

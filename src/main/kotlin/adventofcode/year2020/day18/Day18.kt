@@ -69,10 +69,8 @@ private fun evaluateExpressionWithPlusHigherPrecedence(expression: Expression): 
         evaluated = beforeList + sum.toString() + afterList
     }
 
-
     // Now we only have the multiplications left
     return evaluated.filterNot { it == "*" }.map { it.toLong() }.fold(1L) { product, n -> product * n }
-
 }
 
 private fun findMatchingEndParenthesisIndex(expression: Expression, start: Int): Int {

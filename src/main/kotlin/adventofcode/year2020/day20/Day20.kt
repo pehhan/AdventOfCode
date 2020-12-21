@@ -1,19 +1,41 @@
 package adventofcode.year2020.day20
 
-import adventofcode.year2020.day20.Direction.*
-
-enum class Direction {
-    Up, Down, Left, Right
+object Task1 {
+    fun result(input: String): Long {
+        val tiles = input.split("\n\n").map { Tile.from(it.lines()) }
+        return Image(tiles).corners().fold(1L) { product, tile -> product * tile.id }
+    }
 }
 
-data class Side(val direction: Direction, val data: String)
+data class Tile(val id: Long, val rows: List<String>) {
 
-data class Tile(val id: Long, val sides: List<Side>) {
+    fun rotate(): Tile {
+        // Rotates 90 degrees clockwise
+        return Tile(id, rows.mapIndexed { index, _ -> rows.map { it[index] }.join().reversed() })
+    }
 
-    fun matches(tile: Tile): Boolean {
-        for (side in sides) {
-            for (otherSide in tile.sides) {
-                if (side.data == otherSide.data) return true
+    fun flipHorizontal(): Tile {
+        return Tile(id, rows.map { it.reversed() })
+    }
+
+    fun flipVertical(): Tile {
+        return Tile(id, rows.reversed())
+    }
+
+    fun edges(): List<String> {
+        return listOf(rows.first(), rows.map { it.last() }.join(), rows.last(), rows.map { it.first() }.join())
+    }
+
+    fun edgeMatches(other: Tile): Boolean {
+        val permutations = listOf(this, flipHorizontal(), flipVertical())
+        val otherEdges = other.edges()
+        return permutations.any { edgesMatches(it.edges(), otherEdges) }
+    }
+
+    private fun edgesMatches(firstEdges: List<String>, secondEdges: List<String>): Boolean {
+        for (firstEdge in firstEdges) {
+            for (secondEdge in secondEdges) {
+                if (firstEdge == secondEdge) return true
             }
         }
 
@@ -21,46 +43,25 @@ data class Tile(val id: Long, val sides: List<Side>) {
     }
 
     companion object {
-        fun from(input: String): Tile {
-            val lines = input.lines()
-
+        fun from(lines: List<String>): Tile {
             val id = lines.first().substring(lines.first().indexOf(" ") + 1, lines.first().indexOf(":")).toLong()
-
-            val up = Side(Up, lines[1])
-            val down = Side(Down, lines.last())
-            val left = Side(Left, lines.drop(1).map { it[0] }.joinToString(""))
-            val right = Side(Right, lines.drop(1).map { it[lines.last().length - 1] }.joinToString(""))
-
-            val reversedUp = Side(Up, up.data.reversed())
-            val reversedDown = Side(Down, down.data.reversed())
-            val reversedLeft = Side(Left, left.data.reversed())
-            val reversedRight = Side(Right, right.data.reversed())
-
-            return Tile(id, listOf(up, down, left, right, reversedUp, reversedDown, reversedLeft, reversedRight))
+            val rows = lines.drop(1)
+            return Tile(id, rows)
         }
     }
 }
 
-object Task1 {
-    fun result(input: String): Long {
-        val tiles = input.split("\n\n").map { Tile.from(it) }
+data class Image(val tiles: List<Tile>) {
 
-        return numberMatches(tiles)
-            .filter { it.value == 2 }
-            .keys
-            .fold(1L) { product, tile -> product * tile.id }
-    }
-
-    private fun numberMatches(tiles: List<Tile>): Map<Tile, Int> {
-        // The corners will have exactly two matches, all other tiles will have 3 or 4 matches.
-
+    fun corners(): List<Tile> {
+        // Assume that each corner only matches two other edges.
         val matches = mutableMapOf<Tile, Int>()
 
         for (i in tiles.indices) {
             val tile1 = tiles[i]
             for (j in i + 1 until tiles.size) {
                 val tile2 = tiles[j]
-                if (tile1.matches(tile2)) {
+                if (tile1.edgeMatches(tile2)) {
                     val matchesTile1 = matches[tile1] ?: 0
                     val matchesTile2 = matches[tile2] ?: 0
 
@@ -70,6 +71,10 @@ object Task1 {
             }
         }
 
-        return matches
+        return matches.filter { it.value == 2 }.keys.toList()
     }
+}
+
+private fun List<Char>.join(): String {
+    return joinToString("")
 }

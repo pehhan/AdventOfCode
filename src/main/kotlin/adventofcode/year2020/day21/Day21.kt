@@ -22,7 +22,7 @@ object Task1 {
     }
 
     private fun countOccurrencesOfWords(input: String, words: List<String>): Int {
-        return words.map { input.count(" $it ") }.sum()
+        return words.sumOf { input.count(" $it ") }
     }
 }
 

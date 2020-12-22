@@ -2,13 +2,17 @@ package adventofcode.year2020.day22
 
 import java.util.*
 
+typealias Deck = Deque<Int>
+
+data class Result(val winner: Int, val score: Int)
+
 object Task1 {
     fun getScoreForWinner(input: String): Int {
         val (player1, player2) = input.split("\n\n")
         return runGame(startDeckForPlayer(player1), startDeckForPlayer(player2))
     }
 
-    private fun runGame(player1Deck: Deque<Int>, player2Deck: Deque<Int>): Int {
+    private fun runGame(player1Deck: Deck, player2Deck: Deck): Int {
         while (player1Deck.isNotEmpty() && player2Deck.isNotEmpty()) {
             val player1FirstCard = player1Deck.pop()
             val player2FirstCard = player2Deck.pop()
@@ -30,16 +34,16 @@ object Task1 {
 object Task2 {
     fun getScoreForWinner(input: String): Int {
         val (player1, player2) = input.split("\n\n")
-        return runGame(startDeckForPlayer(player1), startDeckForPlayer(player2)).second
+        return runGame(startDeckForPlayer(player1), startDeckForPlayer(player2)).score
     }
 
-    private fun runGame(player1Deck: Deque<Int>, player2Deck: Deque<Int>): Pair<Int, Int> {
-        val previousRounds = mutableListOf<Pair<Deque<Int>, Deque<Int>>>()
+    private fun runGame(player1Deck: Deck, player2Deck: Deck): Result {
+        val previousRounds = mutableListOf<Pair<Deck, Deck>>()
 
         while (player1Deck.isNotEmpty() && player2Deck.isNotEmpty()) {
             if (matchesPreviousRound(previousRounds, player1Deck, player2Deck)) {
                 // Player 1 wins if the rounds repeat, to avoid infinite recursion
-                return Pair(1, winningScore(player1Deck))
+                return Result(1, winningScore(player1Deck))
             } else {
                 previousRounds += Pair(LinkedList(player1Deck), LinkedList(player2Deck))
 
@@ -51,9 +55,9 @@ object Task2 {
                     val player1RecursiveDeck = LinkedList(player1Deck.take(player1FirstCard))
                     val player2RecursiveDeck = LinkedList(player2Deck.take(player2FirstCard))
 
-                    val winningPlayerAndScore = runGame(player1RecursiveDeck, player2RecursiveDeck)
+                    val result = runGame(player1RecursiveDeck, player2RecursiveDeck)
 
-                    if (winningPlayerAndScore.first == 1) {
+                    if (result.winner == 1) {
                         player1Deck.addLast(player1FirstCard)
                         player1Deck.addLast(player2FirstCard)
                     } else {
@@ -73,15 +77,15 @@ object Task2 {
             }
         }
 
-        return if (player1Deck.isNotEmpty()) Pair(1, winningScore(player1Deck)) else Pair(2, winningScore(player2Deck))
+        return if (player1Deck.isNotEmpty()) Result(1, winningScore(player1Deck)) else Result(2, winningScore(player2Deck))
     }
 
-    private fun matchesPreviousRound(previousRounds: List<Pair<Deque<Int>, Deque<Int>>>, player1Deck: Deque<Int>, player2Deck: Deque<Int>): Boolean {
+    private fun matchesPreviousRound(previousRounds: List<Pair<Deck, Deck>>, player1Deck: Deck, player2Deck: Deck): Boolean {
         return previousRounds.contains(Pair(player1Deck, player2Deck))
     }
 }
 
-private fun startDeckForPlayer(input: String): Deque<Int> {
+private fun startDeckForPlayer(input: String): Deck {
     val cards = input.lines().drop(1).map { it.toInt() }
 
     val deque = LinkedList<Int>()
@@ -90,6 +94,6 @@ private fun startDeckForPlayer(input: String): Deque<Int> {
     return deque
 }
 
-private fun winningScore(deck: Deque<Int>): Int {
+private fun winningScore(deck: Deck): Int {
     return deck.reversed().mapIndexed { index, card -> card * (index + 1) }.sum()
 }

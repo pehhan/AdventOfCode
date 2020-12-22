@@ -7,7 +7,7 @@ object Task1 {
     }
 }
 
-data class Tile(val id: Long, val rows: List<String>) {
+data class Tile(val id: Long = 0, val rows: List<String>) {
 
     fun rotate(): Tile {
         // Rotates 90 degrees clockwise
@@ -72,6 +72,11 @@ data class Image(val tiles: List<Tile>) {
         }
 
         return matches.filter { it.value == 2 }.keys.toList()
+    }
+
+    fun assemble(): Tile {
+        // Assemble the tiles in the correct order, starting with a corner
+        TODO()
     }
 }
 

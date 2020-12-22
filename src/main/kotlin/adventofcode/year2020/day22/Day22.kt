@@ -9,10 +9,10 @@ data class Result(val winner: Int, val score: Int)
 object Task1 {
     fun getScoreForWinner(input: String): Int {
         val (player1, player2) = input.split("\n\n")
-        return runGame(startDeckForPlayer(player1), startDeckForPlayer(player2))
+        return runGame(startDeckForPlayer(player1), startDeckForPlayer(player2)).score
     }
 
-    private fun runGame(player1Deck: Deck, player2Deck: Deck): Int {
+    private fun runGame(player1Deck: Deck, player2Deck: Deck): Result {
         while (player1Deck.isNotEmpty() && player2Deck.isNotEmpty()) {
             val player1FirstCard = player1Deck.pop()
             val player2FirstCard = player2Deck.pop()
@@ -26,8 +26,7 @@ object Task1 {
             }
         }
 
-        val winningDeck = if (player1Deck.isNotEmpty()) player1Deck else player2Deck
-        return winningScore(winningDeck)
+        return if (player1Deck.isNotEmpty()) Result(1, winningScore(player1Deck)) else Result(2, winningScore(player2Deck))
     }
 }
 

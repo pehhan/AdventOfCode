@@ -9,7 +9,23 @@ enum class Operation {
     Acc, Jmp, Nop
 }
 
-data class Instruction(val operation: Operation, val argument: Int)
+data class Instruction(val operation: Operation, val argument: Int) {
+
+    companion object {
+        fun from(line: String): Instruction {
+            val operation = when (line.split(" ")[0]) {
+                "acc" -> Acc
+                "jmp" -> Jmp
+                "nop" -> Nop
+                else -> throw IllegalArgumentException("Unknown instruction: $line")
+            }
+
+            val argument = line.split(" ")[1].toInt()
+
+            return Instruction(operation, argument)
+        }
+    }
+}
 
 enum class TerminationMode {
     Normal, InfiniteLoop
@@ -21,10 +37,10 @@ object Program {
     fun run(instructions: List<Instruction>): Termination {
         var i = 0
         var accumulator = 0
-        val visited = mutableListOf<Int>()
+        val visited = mutableSetOf<Int>()
 
         while (i < instructions.size) {
-            if (visited.contains(i)) return Termination(InfiniteLoop, accumulator)
+            if (i in visited) return Termination(InfiniteLoop, accumulator)
 
             visited += i
 
@@ -43,29 +59,16 @@ object Program {
     }
 }
 
-private fun toInstruction(line: String): Instruction {
-    val operation = when (line.split(" ")[0]) {
-        "acc" -> Acc
-        "jmp" -> Jmp
-        "nop" -> Nop
-        else -> throw IllegalArgumentException("Unknown instruction: $line")
-    }
-
-    val argument = line.split(" ")[1].toInt()
-
-    return Instruction(operation, argument)
-}
-
 object Task1 {
     fun accumulatorBeforeInfiniteLoop(input: String): Int {
-        val instructions = input.lines().map { toInstruction(it) }
+        val instructions = input.lines().map { Instruction.from(it) }
         return Program.run(instructions).accumulator
     }
 }
 
 object Task2 {
     fun accumulatorForNormalTermination(input: String): Int {
-        val instructions = input.lines().map { toInstruction(it) }
+        val instructions = input.lines().map { Instruction.from(it) }
 
         for (i in instructions.indices) {
             val instruction = instructions[i]

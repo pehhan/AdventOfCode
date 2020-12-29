@@ -12,6 +12,12 @@ class Day20Test {
     }
 
     @Test
+    fun testDay20Task2() {
+        val input = FileReader.getResource("year2020/day20.txt")
+        println("2020 Day 20 Task 2: ${Task2.result(input)}")
+    }
+
+    @Test
     fun `construct Tile from lines`() {
         val data = """
             Tile 42:
@@ -20,13 +26,109 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        val tile = Tile.from(data)
+        val tile = Tile.fromLines(data)
 
         assert(tile.id == 42L)
         assert(tile.rows.size == 3)
         assert(tile.rows[0] == "123")
         assert(tile.rows[1] == "456")
         assert(tile.rows[2] == "789")
+    }
+
+    @Test
+    fun `construct Tile from array of Tiles`() {
+        val data1 = """
+            Tile 1:
+            123
+            456
+            789
+        """.trimIndent().lines()
+
+        val data2 = """
+            Tile 2:
+            222
+            333
+            444
+        """.trimIndent().lines()
+
+        val data3 = """
+            Tile 3:
+            333
+            444
+            555
+        """.trimIndent().lines()
+
+        val data4 = """
+            Tile 4:
+            444
+            555
+            666
+        """.trimIndent().lines()
+
+        val data5 = """
+            Tile 5:
+            555
+            666
+            777
+        """.trimIndent().lines()
+
+        val data6 = """
+            Tile 6:
+            666
+            777
+            888
+        """.trimIndent().lines()
+
+        val data7 = """
+            Tile 7:
+            777
+            888
+            999
+        """.trimIndent().lines()
+
+        val data8 = """
+            Tile 8:
+            888
+            999
+            111
+        """.trimIndent().lines()
+
+        val data9 = """
+            Tile 9:
+            999
+            111
+            222
+        """.trimIndent().lines()
+
+        val expected = listOf(
+            "Tile 0:",
+
+            "123222333",
+            "456333444",
+            "789444555",
+
+            "444555666",
+            "555666777",
+            "666777888",
+
+            "777888999",
+            "888999111",
+            "999111222"
+        )
+
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
+        val tile6 = Tile.fromLines(data6)
+        val tile7 = Tile.fromLines(data7)
+        val tile8 = Tile.fromLines(data8)
+        val tile9 = Tile.fromLines(data9)
+
+        val tiles = listOf(listOf(tile1, tile2, tile3), listOf(tile4, tile5, tile6), listOf(tile7, tile8, tile9))
+
+        assert(Tile.fromTiles(tiles) == Tile.fromLines(expected))
     }
 
     @Test
@@ -38,7 +140,7 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        val tile = Tile.from(data).flipHorizontal()
+        val tile = Tile.fromLines(data).flipHorizontal()
 
         assert(tile.id == 42L)
         assert(tile.rows.size == 3)
@@ -56,7 +158,7 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        val tile = Tile.from(data).flipVertical()
+        val tile = Tile.fromLines(data).flipVertical()
 
         assert(tile.id == 42L)
         assert(tile.rows.size == 3)
@@ -74,7 +176,7 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        var tile = Tile.from(data).rotate()
+        var tile = Tile.fromLines(data).rotate()
 
         assert(tile.id == 42L)
         assert(tile.rows.size == 3)
@@ -116,14 +218,14 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        val tile = Tile.from(data)
+        val tile = Tile.fromLines(data)
         val edges = tile.edges()
 
         assert(edges.size == 4)
         assert(edges[0] == "123")
         assert(edges[1] == "369")
-        assert(edges[2] == "789")
-        assert(edges[3] == "147")
+        assert(edges[2] == "987")
+        assert(edges[3] == "741")
     }
 
     @Test
@@ -142,8 +244,8 @@ class Day20Test {
             789
         """.trimIndent().lines()
 
-        val tile1 = Tile.from(data1)
-        val tile2 = Tile.from(data2)
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
 
         assert(tile1.edgeMatches(tile2))
     }
@@ -185,11 +287,11 @@ class Day20Test {
             111
         """.trimIndent().lines()
 
-        val tile1 = Tile.from(data1)
-        val tile2 = Tile.from(data2)
-        val tile3 = Tile.from(data3)
-        val tile4 = Tile.from(data4)
-        val tile5 = Tile.from(data5)
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
 
         assert(tile1.edgeMatches(tile2))
         assert(tile1.edgeMatches(tile3))
@@ -234,11 +336,11 @@ class Day20Test {
             111
         """.trimIndent().lines()
 
-        val tile1 = Tile.from(data1)
-        val tile2 = Tile.from(data2)
-        val tile3 = Tile.from(data3)
-        val tile4 = Tile.from(data4)
-        val tile5 = Tile.from(data5)
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
 
         assert(tile1.edgeMatches(tile2))
         assert(tile1.edgeMatches(tile3))
@@ -283,11 +385,11 @@ class Day20Test {
             111
         """.trimIndent().lines()
 
-        val tile1 = Tile.from(data1)
-        val tile2 = Tile.from(data2)
-        val tile3 = Tile.from(data3)
-        val tile4 = Tile.from(data4)
-        val tile5 = Tile.from(data5)
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
 
         assert(!tile1.edgeMatches(tile2))
         assert(!tile1.edgeMatches(tile3))
@@ -297,6 +399,147 @@ class Day20Test {
 
     @Test
     fun `corners for Tile calculated correctly`() {
+        val tiles = getDebugTiles()
+        val image = Image(tiles)
+
+        val corners = image.corners()
+
+        assert(corners.size == 4)
+        assert(corners[0] == tiles[1])
+        assert(corners[1] == tiles[8])
+        assert(corners[2] == tiles[2])
+        assert(corners[3] == tiles[6])
+    }
+
+    @Test
+    fun `assemble assembles tiles in correct order`() {
+        val tiles = getDebugTiles()
+        val image = Image(tiles)
+
+        val assembledTiles = image.assemble()
+
+        assert(assembledTiles == getDebugAssembledTiles())
+    }
+
+    @Test
+    fun `remove borders from Tile`() {
+        val data = """
+            Tile 2311:
+            ..##.#..#.
+            ##..#.....
+            #...##..#.
+            ####.#...#
+            ##.##.###.
+            ##...#.###
+            .#.#.#..##
+            ..#....#..
+            ###...#.#.
+            ..###..###
+        """.trimIndent().lines()
+
+        val tile = Tile.fromLines(data)
+
+        val newData = """
+            Tile 2311:
+            #..#....
+            ...##..#
+            ###.#...
+            #.##.###
+            #...#.##
+            #.#.#..#
+            .#....#.
+            ##...#.#
+        """.trimIndent().lines()
+
+        val newTile = Tile.fromLines(newData)
+
+        assert(tile.withoutBorder() == newTile)
+    }
+
+    @Test
+    fun `find simple pattern in Tile`() {
+        val data = """
+            Tile 2311:
+            ..##.#..#.
+            ##..#.....
+            #...##..#.
+            ####.#...#
+            ##.##.###.
+            ##...#.###
+            .#.#.#..##
+            ..#....#..
+            ###...#.#.
+            ..###..###
+        """.trimIndent().lines()
+
+        val tile = Tile.fromLines(data)
+
+        val pattern = listOf(
+            "### #  ",
+            "# ## ##",
+            "#   # #"
+        )
+
+        assert(tile.findPatternInPermutations(pattern)!!.numberOfMatches == 1)
+        assert(tile.findPatternInPermutations(pattern)!!.tile == tile)
+    }
+
+    @Test
+    fun `find complicated pattern in Tile`() {
+        val data = """
+            Tile 2311:
+            ..##.#..#.
+            ##..#.....
+            #...##..#.
+            ####.#...#
+            ##.##.###.
+            ##...#.###
+            .#.#.#..##
+            ..#....#..
+            ###...#.#.
+            ..###..###
+        """.trimIndent().lines()
+
+        val tile = Tile.fromLines(data)
+
+        val pattern = listOf(
+            "  # #  ",
+            "# ##  #",
+            "#   #  "
+        )
+
+        assert(tile.findPatternInPermutations(pattern)!!.numberOfMatches == 1)
+        assert(tile.findPatternInPermutations(pattern)!!.tile == tile)
+    }
+
+    @Test
+    fun `find missing pattern in Tile`() {
+        val data = """
+            Tile 2311:
+            ..##.#..#.
+            ##..#.....
+            #...##..#.
+            ####.#...#
+            ##.##.###.
+            ##...#.###
+            .#.#.#..##
+            ..#....#..
+            ###...#.#.
+            ..###..###
+        """.trimIndent().lines()
+
+        val tile = Tile.fromLines(data)
+
+        val pattern = listOf(
+            "#####  ",
+            "####  #",
+            "#   #  "
+        )
+
+        assert(tile.findPatternInPermutations(pattern) == null)
+    }
+
+    private fun getDebugTiles(): List<Tile> {
         val data1 = """
             Tile 2311:
             ..##.#..#.
@@ -423,24 +666,156 @@ class Day20Test {
             ..#.###...
         """.trimIndent().lines()
 
-        val tile1 = Tile.from(data1)
-        val tile2 = Tile.from(data2)
-        val tile3 = Tile.from(data3)
-        val tile4 = Tile.from(data4)
-        val tile5 = Tile.from(data5)
-        val tile6 = Tile.from(data6)
-        val tile7 = Tile.from(data7)
-        val tile8 = Tile.from(data8)
-        val tile9 = Tile.from(data9)
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
+        val tile6 = Tile.fromLines(data6)
+        val tile7 = Tile.fromLines(data7)
+        val tile8 = Tile.fromLines(data8)
+        val tile9 = Tile.fromLines(data9)
 
-        val image = Image(listOf(tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9))
+        return listOf(tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9)
+    }
 
-        val corners = image.corners()
+    private fun getDebugAssembledTiles(): List<List<Tile>> {
+        val data1 = """
+            Tile 1951:
+            #...##.#..
+            ..#.#..#.#
+            .###....#.
+            ###.##.##.
+            .###.#####
+            .##.#....#
+            #...######
+            .....#..##
+            #.####...#
+            #.##...##.
+        """.trimIndent().lines()
 
-        assert(corners.size == 4)
-        assert(corners[0] == tile2)
-        assert(corners[1] == tile9)
-        assert(corners[2] == tile3)
-        assert(corners[3] == tile7)
+        val data2 = """
+            Tile 2311:
+            ..###..###
+            ###...#.#.
+            ..#....#..
+            .#.#.#..##
+            ##...#.###
+            ##.##.###.
+            ####.#...#
+            #...##..#.
+            ##..#.....
+            ..##.#..#.
+        """.trimIndent().lines()
+
+        val data3 = """
+            Tile 3079:
+            #.#.#####.
+            .#..######
+            ..#.......
+            ######....
+            ####.#..#.
+            .#...#.##.
+            #.#####.##
+            ..#.###...
+            ..#.......
+            ..#.###...
+        """.trimIndent().lines()
+
+        val data4 = """
+            Tile 2729:
+            #.##...##.
+            ##..#.##..
+            ##.####...
+            ####.#.#..
+            .#.####...
+            .##..##.#.
+            ....#..#.#
+            ..#.#.....
+            ####.#....
+            ...#.#.#.#
+        """.trimIndent().lines()
+
+        val data5 = """
+            Tile 1427:
+            ..##.#..#.
+            ..#..###.#
+            .#.####.#.
+            ...#.#####
+            ...##..##.
+            ....#...##
+            #.#.#.##.#
+            .#.##.#..#
+            .#..#.##..
+            ###.##.#..
+        """.trimIndent().lines()
+
+        val data6 = """
+            Tile 2473:
+            ..#.###...
+            ##.##....#
+            ..#.###..#
+            ###.#..###
+            .######.##
+            #.#.#.#...
+            #.###.###.
+            #.###.##..
+            .######...
+            .##...####
+        """.trimIndent().lines()
+
+        val data7 = """
+            Tile 2971:
+            ...#.#.#.#
+            ..#.#.###.
+            ..####.###
+            #..#.#..#.
+            .#..####.#
+            .#####..##
+            ##.##..#..
+            #.#.###...
+            #...###...
+            ..#.#....#
+        """.trimIndent().lines()
+
+        val data8 = """
+            Tile 1489:
+            ###.##.#..
+            ..##.##.##
+            ##.#...##.
+            ...#.#.#..
+            #..#.#.#.#
+            #####...#.
+            ..#...#...
+            .##..##...
+            ..##...#..
+            ##.#.#....
+        """.trimIndent().lines()
+
+        val data9 = """
+            Tile 1171:
+            .##...####
+            #..#.##..#
+            .#.#..#.##
+            .####.###.
+            ####.###..
+            .##....##.
+            .####...#.
+            .####.##.#
+            ...#..####
+            ...##.....
+        """.trimIndent().lines()
+
+        val tile1 = Tile.fromLines(data1)
+        val tile2 = Tile.fromLines(data2)
+        val tile3 = Tile.fromLines(data3)
+        val tile4 = Tile.fromLines(data4)
+        val tile5 = Tile.fromLines(data5)
+        val tile6 = Tile.fromLines(data6)
+        val tile7 = Tile.fromLines(data7)
+        val tile8 = Tile.fromLines(data8)
+        val tile9 = Tile.fromLines(data9)
+
+        return listOf(listOf(tile1, tile2, tile3), listOf(tile4, tile5, tile6), listOf(tile7, tile8, tile9))
     }
 }

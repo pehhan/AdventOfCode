@@ -20,8 +20,8 @@ object Task2 {
             " #  #  #  #  #  #   "
         )
 
-        val patternMatches = assembledTile.findPatternInPermutations(patternToFind) ?: throw IllegalArgumentException("Could not find pattern in image")
-        return patternMatches.tile.waterRoughness(patternToFind, patternMatches)
+        val patternMatch = assembledTile.findPatternInPermutations(patternToFind) ?: throw IllegalArgumentException("Could not find pattern in image")
+        return patternMatch.tile.waterRoughness(patternToFind, patternMatch)
     }
 }
 

@@ -10,4 +10,10 @@ class Day9Test {
         val input = FileReader.getResource("year2015/day9.txt")
         println("2015 Day 9 Task 1: ${Task1.shortestDistance(input)}")
     }
+
+    @Test
+    fun testDay9Task2() {
+        val input = FileReader.getResource("year2015/day9.txt")
+        println("2015 Day 9 Task 2: ${Task2.longestDistance(input)}")
+    }
 }

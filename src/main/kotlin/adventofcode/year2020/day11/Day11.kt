@@ -105,6 +105,9 @@ private fun nextStep(seating: Seating, neighbourLimit: Int, occupiedSeatsFunc: (
                         nextSeating[x][y] = Empty
                     }
                 }
+                Floor -> {
+                    // Do nothing
+                }
             }
         }
     }

@@ -78,6 +78,9 @@ object Task2 {
                     val termination = runModifiedInstructions(instructions, i, Instruction(newOperation, instruction.argument))
                     if (termination.mode == Normal) return termination.accumulator
                 }
+                else -> {
+                    // Do nothing
+                }
             }
         }
 

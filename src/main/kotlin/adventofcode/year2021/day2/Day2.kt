@@ -28,7 +28,7 @@ data class Sub(val position: Int, val depth: Int, val aim: Int)
 
 object Task1 {
     fun getValue(lines: List<String>): Int {
-        val commands = lines.map { Command.fromLine(it)}
+        val commands = lines.map { Command.fromLine(it) }
         val sub = commands.fold(Sub(0, 0, 0)) { sub, command ->
             when (command.type) {
                 Forward -> Sub(sub.position + command.value, sub.depth, sub.aim)

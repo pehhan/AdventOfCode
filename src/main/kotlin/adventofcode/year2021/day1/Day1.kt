@@ -8,10 +8,10 @@ object Task1 {
 
 object Task2 {
     fun numberOfIncreases(lines: List<Int>): Int {
-        return lines.windowed(3).map { it.sum() }.numberOfIncreases()
+        return lines.windowed(3) { it.sum() }.numberOfIncreases()
     }
 }
 
 private fun List<Int>.numberOfIncreases(): Int {
-    return zipWithNext().map { it.second - it.first }.count { it > 0 }
+    return zipWithNext().count { it.second > it.first }
 }

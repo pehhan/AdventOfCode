@@ -24,34 +24,34 @@ data class Command(val type: CommandType, val value: Int) {
     }
 }
 
-data class Position(val horizontal: Int, val depth: Int, val aim: Int)
+data class Sub(val position: Int, val depth: Int, val aim: Int)
 
 object Task1 {
     fun getValue(lines: List<String>): Int {
         val commands = lines.map { Command.fromLine(it)}
-        val finalPosition = commands.fold(Position(0, 0, 0)) { position, command ->
+        val sub = commands.fold(Sub(0, 0, 0)) { sub, command ->
             when (command.type) {
-                Forward -> Position(position.horizontal + command.value, position.depth, position.aim)
-                Down -> Position(position.horizontal, position.depth + command.value, position.aim)
-                Up -> Position(position.horizontal, position.depth - command.value, position.aim)
+                Forward -> Sub(sub.position + command.value, sub.depth, sub.aim)
+                Down -> Sub(sub.position, sub.depth + command.value, sub.aim)
+                Up -> Sub(sub.position, sub.depth - command.value, sub.aim)
             }
         }
 
-        return finalPosition.horizontal * finalPosition.depth
+        return sub.position * sub.depth
     }
 }
 
 object Task2 {
     fun getValue(lines: List<String>): Int {
         val commands = lines.map { Command.fromLine(it) }
-        val finalPosition = commands.fold(Position(0, 0, 0)) { position, command ->
+        val sub = commands.fold(Sub(0, 0, 0)) { sub, command ->
             when (command.type) {
-                Forward -> Position(position.horizontal + command.value, position.depth + position.aim * command.value, position.aim)
-                Down -> Position(position.horizontal, position.depth, position.aim + command.value)
-                Up -> Position(position.horizontal, position.depth, position.aim - command.value)
+                Forward -> Sub(sub.position + command.value, sub.depth + sub.aim * command.value, sub.aim)
+                Down -> Sub(sub.position, sub.depth, sub.aim + command.value)
+                Up -> Sub(sub.position, sub.depth, sub.aim - command.value)
             }
         }
 
-        return finalPosition.horizontal * finalPosition.depth
+        return sub.position * sub.depth
     }
 }

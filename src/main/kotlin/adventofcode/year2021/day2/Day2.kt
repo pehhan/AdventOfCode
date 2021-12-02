@@ -11,8 +11,8 @@ data class Command(val type: CommandType, val value: Int) {
 
     companion object {
         fun fromLine(line: String): Command {
-            val type = line.split(" ")[0]
-            val value = line.split(" ")[1].toInt()
+            val type = line.substringBefore(" ")
+            val value = line.substringAfter(" ").toInt()
 
             return when (type) {
                 "forward" -> Command(Forward, value)
@@ -31,9 +31,9 @@ object Task1 {
         val commands = lines.map { Command.fromLine(it) }
         val sub = commands.fold(Sub(0, 0, 0)) { sub, command ->
             when (command.type) {
-                Forward -> Sub(sub.position + command.value, sub.depth, sub.aim)
-                Down -> Sub(sub.position, sub.depth + command.value, sub.aim)
-                Up -> Sub(sub.position, sub.depth - command.value, sub.aim)
+                Forward -> sub.copy(position = sub.position + command.value)
+                Down -> sub.copy(depth = sub.depth + command.value)
+                Up -> sub.copy(depth = sub.depth - command.value)
             }
         }
 
@@ -46,9 +46,9 @@ object Task2 {
         val commands = lines.map { Command.fromLine(it) }
         val sub = commands.fold(Sub(0, 0, 0)) { sub, command ->
             when (command.type) {
-                Forward -> Sub(sub.position + command.value, sub.depth + sub.aim * command.value, sub.aim)
-                Down -> Sub(sub.position, sub.depth, sub.aim + command.value)
-                Up -> Sub(sub.position, sub.depth, sub.aim - command.value)
+                Forward -> sub.copy(position = sub.position + command.value, depth = sub.depth + sub.aim * command.value)
+                Down -> sub.copy(aim = sub.aim + command.value)
+                Up -> sub.copy(aim = sub.aim - command.value)
             }
         }
 

@@ -11,7 +11,7 @@ object Task1 {
     private fun rate(input: List<String>, rating: (List<Char>) -> Char): Int {
         return input
             .map { it.toList() }
-            .transposed()
+            .transpose()
             .map { rating(it) }
             .joinToString("")
             .toInt(2)
@@ -31,7 +31,7 @@ object Task2 {
         var index = 0
 
         while (result.size > 1) {
-            val bit = rating(result.transposed()[index])
+            val bit = rating(result.transpose()[index])
 
             result = result.filter { it[index] == bit }
             index++
@@ -49,7 +49,7 @@ private fun leastCommonBit(chars: List<Char>): Char {
     return if (chars.count { it == '0' } > chars.count { it == '1' }) '1' else '0'
 }
 
-private fun <T> List<List<T>>.transposed(): List<List<T>> {
+private fun <T> List<List<T>>.transpose(): List<List<T>> {
     val rowSize = size
     val columnSize = this[0].size
     val transposed = List(columnSize) { mutableListOf<T>() }

@@ -4,9 +4,8 @@ fun numberOfFish(input: String, days: Int): Long {
     var fishMap = input
         .split(",")
         .map { it.toInt() }
-        .groupingBy { it }
-        .eachCount()
-        .mapValues { (_, value) -> value.toLong() }
+        .groupBy { it }
+        .mapValues { it.value.size.toLong() }
 
     repeat(days) {
         fishMap = tick(fishMap)

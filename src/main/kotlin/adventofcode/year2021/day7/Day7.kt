@@ -21,6 +21,6 @@ private fun fuel(input: String, cost: (Int) -> Int): Int {
     val maxPosition = positions.maxOf { it }
 
     return (minPosition..maxPosition)
-        .map { position -> positions.map { cost(abs(it - position)) }.sum() }
+        .map { position -> positions.sumOf { cost(abs(it - position)) } }
         .minOf { it }
 }

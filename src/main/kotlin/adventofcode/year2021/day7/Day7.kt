@@ -11,7 +11,7 @@ object Task1 {
 object Task2 {
     fun fuel(input: String) = fuel(input, ::cost)
 
-    private fun cost(positions: Int) = (0..positions).sum()
+    private fun cost(positions: Int) = positions * (positions + 1) / 2
 }
 
 private fun fuel(input: String, cost: (Int) -> Int): Int {

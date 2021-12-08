@@ -1,7 +1,6 @@
 package adventofcode.year2021.day7
 
 import adventofcode.FileReader
-import adventofcode.year2021.day6.numberOfFish
 import org.junit.Test
 
 class Day7Test {

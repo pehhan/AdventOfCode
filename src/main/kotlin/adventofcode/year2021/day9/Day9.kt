@@ -1,11 +1,6 @@
 package adventofcode.year2021.day9
 
-data class Point(val x: Int, val y: Int) {
-
-    override fun toString(): String {
-        return "($x, $y)"
-    }
-}
+data class Point(val x: Int, val y: Int)
 
 data class Grid(val grid: List<List<Int>>) {
 
@@ -26,7 +21,7 @@ data class Grid(val grid: List<List<Int>>) {
     private fun getNeighbors(point: Point): List<Point> {
         val x = point.x
         val y = point.y
-
+        
         return when (x) {
             0 -> when (y) {
                 0 -> listOf(Point(x, y + 1), Point(x + 1, y))
@@ -46,41 +41,36 @@ data class Grid(val grid: List<List<Int>>) {
         }
     }
 
-    fun findValleys(): List<Set<Point>> {
+    fun findBasins(): List<Set<Point>> {
         val lowPoints = findLowPoints()
-        val valleys = mutableListOf<MutableSet<Point>>()
-
-        println("lowpoints = $lowPoints")
+        val basins = mutableListOf<Set<Point>>()
 
         for (point in lowPoints) {
-            val valley = mutableSetOf(point)
+            var basin = setOf(point)
+            var expandedBasin: Set<Point>
 
-            val neighbors = getNeighbors(point).filter { grid[it.y][it.x] != 9 }.filter { !valleys.flatten().contains(it) }
+            while (true) {
+                expandedBasin = expandBasin(basin)
 
-            println("1. neighbors = $neighbors")
+                if (basin.size == expandedBasin.size) {
+                    basins += basin
+                    break
+                }
 
-            for (neighbor in neighbors) {
-                valley += findValley(neighbor, neighbors + valleys.flatten())
+                basin = expandedBasin
             }
-
-            valleys += valley
         }
 
-        return valleys
+        return basins
     }
 
-    private fun findValley(point: Point, previousNeighbors: List<Point>): Set<Point> {
-        if (grid[point.y][point.x] == 9) return emptySet()
-
-        val neighbors = getNeighbors(point).filter { grid[it.y][it.x] != 9 }.filter { !previousNeighbors.contains(it) }
-
-        val valley = mutableSetOf(point)
-
-        for (neighbor in neighbors) {
-            valley += findValley(neighbor, previousNeighbors + neighbors)
+    private fun expandBasin(basin: Set<Point>): Set<Point> {
+        val newBasin = basin.toMutableSet()
+        for (point in basin) {
+            val validNeighbors = getNeighbors(point).filter { grid[it.y][it.x] != 9 }
+            newBasin.addAll(validNeighbors)
         }
-
-        return valley
+        return newBasin
     }
 }
 
@@ -96,11 +86,11 @@ object Task1 {
 
 object Task2 {
     fun largestBasinsProduct(lines: List<String>): Int {
-        val basins = Grid(lines.map { line -> line.toList().map { it.digitToInt() } })
-            .findValleys()
+        return Grid(lines.map { line -> line.toList().map { it.digitToInt() } })
+            .findBasins()
             .map { it.size }
             .sortedDescending()
-
-        return basins[0] * basins[1] * basins[2]
+            .take(3)
+            .reduce { acc, i -> acc * i }
     }
 }

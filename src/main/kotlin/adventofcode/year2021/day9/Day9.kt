@@ -21,7 +21,7 @@ data class Grid(val grid: List<List<Int>>) {
     private fun getNeighbors(point: Point): List<Point> {
         val x = point.x
         val y = point.y
-        
+
         return when (x) {
             0 -> when (y) {
                 0 -> listOf(Point(x, y + 1), Point(x + 1, y))

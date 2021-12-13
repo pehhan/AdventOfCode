@@ -38,7 +38,7 @@ private fun parseConnections(lines: List<String>): Map<Cave, Set<Cave>> {
     return connections
 }
 
-private fun numberOfPaths(from: Cave, canVisitSmallCaveTwice: Boolean, connections: Map<Cave, Set<Cave>>, visited: MutableSet<Cave>, visitedBefore: Boolean, prevNumberOfPaths: Int): Int {
+private fun numberOfPaths(from: Cave, canVisitSmallCaveTwice: Boolean, connections: Map<Cave, Set<Cave>>, visited: MutableSet<Cave>, visitedSmallTwice: Boolean, prevNumberOfPaths: Int): Int {
     if (from.isEnd) return prevNumberOfPaths + 1
 
     var numberOfPaths = prevNumberOfPaths
@@ -46,20 +46,20 @@ private fun numberOfPaths(from: Cave, canVisitSmallCaveTwice: Boolean, connectio
     for (to in connections[from]!!) {
         if (to.isStart) continue
 
-        var visitedNow = visitedBefore
+        var visitedSmallTwiceNow = visitedSmallTwice
 
         if (to.isSmall) {
             if (to in visited) {
-                if (!canVisitSmallCaveTwice || visitedBefore) continue
-                visitedNow = true
+                if (!canVisitSmallCaveTwice || visitedSmallTwice) continue
+                visitedSmallTwiceNow = true
             } else {
                 visited += to
             }
         }
 
-        numberOfPaths = numberOfPaths(to, canVisitSmallCaveTwice, connections, visited, visitedNow, numberOfPaths)
+        numberOfPaths = numberOfPaths(to, canVisitSmallCaveTwice, connections, visited, visitedSmallTwiceNow, numberOfPaths)
 
-        if (to.isSmall && visitedBefore == visitedNow) {
+        if (to.isSmall && visitedSmallTwice == visitedSmallTwiceNow) {
             visited -= to
         }
     }

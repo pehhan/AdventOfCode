@@ -1,11 +1,11 @@
 package adventofcode.year2021.day13
 
-import adventofcode.year2021.day13.Orientation.Horizontal
-import adventofcode.year2021.day13.Orientation.Vertical
+import adventofcode.year2021.day13.FoldOrientation.Horizontal
+import adventofcode.year2021.day13.FoldOrientation.Vertical
 
-enum class Orientation { Horizontal, Vertical }
+enum class FoldOrientation { Horizontal, Vertical }
 
-data class Instruction(val orientation: Orientation, val coordinate: Int) {
+data class Instruction(val foldOrientation: FoldOrientation, val coordinate: Int) {
 
     companion object {
         fun parse(line: String): Instruction {
@@ -33,17 +33,17 @@ data class Grid(private val dots: MutableSet<Dot>) {
         get() = dots.size
 
     fun fold(instruction: Instruction) {
-        when (instruction.orientation) {
+        when (instruction.foldOrientation) {
             Horizontal -> {
                 val dotsToFold = dots.filter { it.y > instruction.coordinate }.toSet()
-                val newDots = dotsToFold.map { Dot(it.x, instruction.coordinate - (it.y - instruction.coordinate)) }
+                val newDots = dotsToFold.map { Dot(it.x, instruction.coordinate - (it.y - instruction.coordinate)) }.toSet()
 
                 dots -= dotsToFold
                 dots += newDots
             }
             Vertical -> {
                 val dotsToFold = dots.filter { it.x > instruction.coordinate }.toSet()
-                val newDots = dotsToFold.map { Dot(instruction.coordinate - (it.x - instruction.coordinate), it.y) }
+                val newDots = dotsToFold.map { Dot(instruction.coordinate - (it.x - instruction.coordinate), it.y) }.toSet()
 
                 dots -= dotsToFold
                 dots += newDots
@@ -60,11 +60,7 @@ data class Grid(private val dots: MutableSet<Dot>) {
 
         for (y in 0..maxY) {
             for (x in 0..maxX) {
-                str += if (Dot(x, y) in dots) {
-                    "#"
-                } else {
-                    "."
-                }
+                str += if (Dot(x, y) in dots) { "#" } else { " " }
             }
             str += "\n"
         }

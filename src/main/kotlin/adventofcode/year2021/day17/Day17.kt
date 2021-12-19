@@ -3,7 +3,7 @@ package adventofcode.year2021.day17
 import kotlin.math.abs
 import kotlin.math.max
 
-data class Probe(var x: Int, var y: Int, var xVelocity: Int, var yVelocity: Int) {
+data class Probe(private var x: Int, private var y: Int, private var xVelocity: Int, private var yVelocity: Int) {
 
     var maxY = Int.MIN_VALUE
 
@@ -30,6 +30,14 @@ data class Probe(var x: Int, var y: Int, var xVelocity: Int, var yVelocity: Int)
 
     fun hasOvershot(xRange: IntRange, yRange: IntRange): Boolean {
         return x > xRange.last || y < yRange.first
+    }
+
+    fun reset(xVelocity: Int, yVelocity: Int) {
+        x = 0
+        y = 0
+        this.xVelocity = xVelocity
+        this.yVelocity = yVelocity
+        maxY = Int.MIN_VALUE
     }
 }
 
@@ -83,11 +91,7 @@ private fun getProbeData(input: String): ProbeData {
             yVelocity = -1
         }
 
-        probe.x = 0
-        probe.y = 0
-        probe.xVelocity = xVelocity
-        probe.yVelocity = yVelocity
-        probe.maxY = Int.MIN_VALUE
+        probe.reset(xVelocity, yVelocity)
 
         if (yVelocity < 0 && abs(yVelocity) > maxYVelocity) break
     }

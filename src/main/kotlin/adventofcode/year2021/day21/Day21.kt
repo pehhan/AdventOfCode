@@ -1,5 +1,6 @@
 package adventofcode.year2021.day21
 
+import kotlin.math.max
 import kotlin.math.min
 
 
@@ -55,6 +56,51 @@ data class Game(val player1: Player, val player2: Player) {
     }
 }
 
+data class QuantumGameState(val player1Position: Int, val player1Score: Int, val player2Position: Int, val player2Score: Int)
+
+typealias NumberOfWins = Pair<Long, Long>
+
+object QuantumGame {
+
+    private val memory = mutableMapOf<QuantumGameState, NumberOfWins>()
+
+    fun play(state: QuantumGameState): NumberOfWins {
+        if (state.player1Score >= 21) return 1L to 0L
+        if (state.player2Score >= 21) return 0L to 1L
+
+        if (memory[state] != null) {
+            return memory[state]!!
+        }
+
+        var player1Wins = 0L
+        var player2Wins = 0L
+
+        for (roll1 in 1..3) {
+            for (roll2 in 1..3) {
+                for (roll3 in 1..3) {
+                    var newPosition = (state.player1Position + roll1 + roll2 + roll3) % 10
+
+                    if (newPosition == 0) {
+                        newPosition = 10
+                    }
+
+                    val newScore = state.player1Score + newPosition
+                    
+                    val numberOfWins = play(QuantumGameState(state.player2Position, state.player2Score, newPosition, newScore))
+
+                    player1Wins += numberOfWins.second
+                    player2Wins += numberOfWins.first
+                }
+            }
+        }
+
+        val numberOfWins = NumberOfWins(player1Wins, player2Wins)
+        memory[state] = numberOfWins
+
+        return numberOfWins
+    }
+}
+
 object Task1 {
     fun result(input: String): Int {
         val (player1, player2) = input.lines().map { Player.parse(it) }
@@ -63,5 +109,14 @@ object Task1 {
         game.play()
 
         return min(player1.score, player2.score) * (player1.numberOfRolls + player2.numberOfRolls)
+    }
+}
+
+object Task2 {
+    fun result(input: String): Long {
+        val (player1, player2) = input.lines().map { Player.parse(it) }
+        val numberOfWins = QuantumGame.play(QuantumGameState(player1.position, 0, player2.position, 0))
+
+        return max(numberOfWins.first, numberOfWins.second)
     }
 }

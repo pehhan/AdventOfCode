@@ -85,7 +85,7 @@ object QuantumGame {
                     }
 
                     val newScore = state.player1Score + newPosition
-                    
+
                     val numberOfWins = play(QuantumGameState(state.player2Position, state.player2Score, newPosition, newScore))
 
                     player1Wins += numberOfWins.second

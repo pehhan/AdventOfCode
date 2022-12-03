@@ -8,7 +8,7 @@ class Day2Test {
     @Test
     fun testDay2Task1() {
         val input = FileReader.getResource("year2022/day2.txt")
-        println("2022 Day 1 Task 1: ${Task1.totalScore(input)}")
+        println("2022 Day 2 Task 1: ${Task1.totalScore(input)}")
     }
 
     @Test

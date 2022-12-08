@@ -29,5 +29,5 @@ fun IntRange.covers(otherRange: IntRange): Boolean {
 }
 
 fun IntRange.overlaps(otherRange: IntRange): Boolean {
-    return otherRange.first in first..last || otherRange.last in first..last
+    return otherRange.first in this || otherRange.last in this
 }

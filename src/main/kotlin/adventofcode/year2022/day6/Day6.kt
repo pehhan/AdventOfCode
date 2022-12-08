@@ -9,15 +9,9 @@ object Task2 {
 }
 
 private fun markerPosition(input: String, n: Int): Int {
-    input.forEachIndexed { index, _ ->
-        if (characterSet(input, index, n).size == n) {
-            return index + n
-        }
-    }
-
-    throw IllegalArgumentException("Did not find marker in text.")
-}
-
-private fun characterSet(input: String, start: Int, n: Int): Set<Char> {
-    return input.substring(start, start + n).toSet()
+    return input
+        .windowed(n)
+        .withIndex()
+        .first { it.value.toSet().size == n }
+        .index + n
 }

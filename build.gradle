@@ -13,7 +13,7 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.9.10'
     repositories {
         mavenCentral()
     }

@@ -10,4 +10,10 @@ class Day2Test {
         val input = FileReader.getResource("year2018/day2.txt")
         println("2018 Day 2 Task 1: ${Task1.checksum(input)}")
     }
+
+    @Test
+    fun testDay2Task2() {
+        val input = FileReader.getResource("year2018/day2.txt")
+        println("2018 Day 2 Task 2: ${Task2.commonLetters(input)}")
+    }
 }

@@ -1,6 +1,5 @@
 package adventofcode.year2018.day2
 
-import adventofcode.year2018.day2.Task2.numberOfDifferentCharacters
 import java.lang.IllegalArgumentException
 
 object Task1 {

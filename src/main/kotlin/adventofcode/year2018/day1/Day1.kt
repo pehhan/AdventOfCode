@@ -1,9 +1,6 @@
 package adventofcode.year2018.day1
 
 typealias Frequency = Int
-typealias FoundFrequencies = Set<Frequency>
-
-data class Result(val foundFrequencies: FoundFrequencies, val duplicate: Frequency)
 
 object Task1 {
     fun resultingFrequency(input: String): Int {
@@ -23,10 +20,10 @@ object Task2 {
             .lines()
             .map { it.toInt() }
 
-        return findDuplicateFrequency(changes, setOf(0), 0).duplicate
+        return findDuplicateFrequency(changes, setOf(0), 0)
     }
 
-    private fun findDuplicateFrequency(changes: List<Frequency>, frequencies: FoundFrequencies, start: Frequency): Result {
+    private fun findDuplicateFrequency(changes: List<Frequency>, frequencies: Set<Frequency>, start: Frequency): Frequency {
         var current = start
         val foundFrequencies = frequencies.toMutableSet()
 
@@ -34,7 +31,7 @@ object Task2 {
             current += change
 
             if (current in foundFrequencies) {
-                return Result(foundFrequencies, current)
+                return current
             } else {
                 foundFrequencies += current
             }

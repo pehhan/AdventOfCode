@@ -11,9 +11,9 @@ class Day2Test {
         println("2023 Day 2 Task 1: ${Task1.sum(input)}")
     }
 
-//    @Test
-//    fun testDay2Task2() {
-//        val input = FileReader.getResource("year2023/day2.txt")
-//        println("2023 Day 2 Task 2: ${Task2.sum(input)}")
-//    }
+    @Test
+    fun testDay2Task2() {
+        val input = FileReader.getResource("year2023/day2.txt")
+        println("2023 Day 2 Task 2: ${Task2.sum(input)}")
+    }
 }

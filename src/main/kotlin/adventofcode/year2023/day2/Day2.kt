@@ -13,6 +13,14 @@ data class Game(val id: Int, val revealedCubes: List<Set<RevealedCubes>>) {
     fun isPossible(cube: Cube, max: Int): Boolean {
         return !revealedCubes.flatten().any { it.cube == cube && it.number > max }
     }
+
+    fun power(): Int {
+        return power(Cube.Red) * power(Cube.Green) * power(Cube.Blue)
+    }
+
+    private fun power(cube: Cube): Int {
+        return revealedCubes.flatten().filter { it.cube == cube }.maxOf { it.number }
+    }
 }
 
 fun List<Game>.filterMaxCubes(cube: Cube, max: Int): List<Game> {
@@ -28,6 +36,15 @@ object Task1 {
             .filterMaxCubes(Cube.Green, 13)
             .filterMaxCubes(Cube.Blue, 14)
             .sumOf { it.id }
+    }
+}
+
+object Task2 {
+    fun sum(input: String): Int {
+        return input
+            .lines()
+            .map { it.toGame() }
+            .sumOf { it.power() }
     }
 }
 

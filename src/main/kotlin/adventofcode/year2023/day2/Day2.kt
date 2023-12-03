@@ -50,9 +50,7 @@ object Task2 {
 
 private fun String.toGame(): Game {
     val id = substringBefore(":").substringAfter("Game ").toInt()
-    val sets = substringAfter(": ")
-        .split("; ")
-        .map { it.toRevealedCubesSet() }
+    val sets = substringAfter(": ").split("; ").map { it.toRevealedCubesSet() }
 
     return Game(id, sets)
 }

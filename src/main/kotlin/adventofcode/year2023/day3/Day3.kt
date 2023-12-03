@@ -17,19 +17,31 @@ object Task1 {
     }
 }
 
-fun String.toRow(): List<Char> {
+object Task2 {
+    fun sum(input: String): Int {
+        return input
+            .toGrid()
+            .sumOfGearRatios()
+    }
+}
+
+private fun String.toRow(): List<Char> {
     return toCharArray().toList()
 }
 
-fun String.toGrid(): Grid {
+private fun String.toGrid(): Grid {
     return lines().map { it.toRow() }
 }
 
-fun Char.isSymbol(): Boolean {
+private fun Char.isSymbol(): Boolean {
     return this != '.' && !isDigit()
 }
 
-fun Grid.sumOfPartNumbers(): Int {
+private fun Char.isGear(): Boolean {
+    return this == '*'
+}
+
+private fun Grid.sumOfPartNumbers(): Int {
     val partNumbers = mutableSetOf<PartNumber>()
 
     for (y in this.indices) {
@@ -46,7 +58,51 @@ fun Grid.sumOfPartNumbers(): Int {
     return partNumbers.sumOf { it.number }
 }
 
-fun Grid.hasAnySymbolsAround(position: Position): Boolean {
+private fun Grid.sumOfGearRatios(): Int {
+    var sum = 0
+
+    for (y in this.indices) {
+        for (x in this[y].indices) {
+            val char = this[y][x]
+            val position = Position(x, y)
+
+            if (char.isGear()) {
+                val numbersAround = numbersAround(position)
+
+                if (numbersAround.size == 2) {
+                    val gearRatio = numbersAround.fold(1) { product, partNumber ->
+                        product * partNumber.number
+                    }
+                    sum += gearRatio
+                }
+            }
+        }
+    }
+
+    return sum
+}
+
+private fun Grid.numbersAround(position: Position): Set<PartNumber> {
+    val partNumbers = mutableSetOf<PartNumber>()
+
+    val yMin = max(position.y - 1, 0)
+    val yMax = min(position.y + 1, size - 1)
+
+    val xMin = max(position.x - 1, 0)
+    val xMax = min(position.x + 1, this[0].size - 1)
+
+    for (y in yMin..yMax) {
+        for (x in xMin..xMax) {
+            if (this[y][x].isDigit()) {
+                partNumbers += findFullNumber(Position(x, y))
+            }
+        }
+    }
+
+    return partNumbers
+}
+
+private fun Grid.hasAnySymbolsAround(position: Position): Boolean {
     val yMin = max(position.y - 1, 0)
     val yMax = min(position.y + 1, size - 1)
 
@@ -64,7 +120,7 @@ fun Grid.hasAnySymbolsAround(position: Position): Boolean {
     return false
 }
 
-fun Grid.findFullNumber(position: Position): PartNumber {
+private fun Grid.findFullNumber(position: Position): PartNumber {
     var startIndex = position.x
     var endIndex = position.x
 

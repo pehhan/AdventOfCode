@@ -41,11 +41,9 @@ object Task2 {
             val copies = totalCards[card.id] ?: 0
             val matchingNumbers = card.matchingNumbers()
 
-            repeat(copies) {
-                for (id in card.id + 1..card.id + matchingNumbers) {
-                    if (id <= cards.size) {
-                        totalCards[id] = (totalCards[id] ?: 0) + 1
-                    }
+            for (id in card.id + 1..card.id + matchingNumbers) {
+                if (id <= cards.size) {
+                    totalCards[id] = (totalCards[id] ?: 0) + copies
                 }
             }
         }

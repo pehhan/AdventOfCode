@@ -63,7 +63,7 @@ object Task1 {
         return locationNumbers.min()
     }
 
-    private fun convertSeedNumbersToLocationNumbers(seeds: List<Long>, maps: List<CategoryMap>): List<Long> {
+    fun convertSeedNumbersToLocationNumbers(seeds: List<Long>, maps: List<CategoryMap>): List<Long> {
         var category = Category.Seed
         var numbers = seeds
 
@@ -85,26 +85,59 @@ object Task1 {
             .split(" ")
             .map { it.toLong() }
     }
+}
 
-    private fun categoryMaps(input: String): List<CategoryMap> {
-        val result = mutableListOf<CategoryMap>()
-        val maps = input.split("\n\n").drop(1)
+object Task2 {
+    fun lowestLocationNumber(input: String): Long {
+        val seedRanges = seedRanges(input)
 
-        for (map in maps) {
-            val source = Category.from(map.lines().first().substringBefore("-to"))
-            val destination = Category.from(map.lines().first().substringAfter("to-").substringBefore(" "))
-            val ranges = ranges(map)
+        // This blows up when running with real input, need smarter solution
+        val seeds = seedRanges.flatten()
+        val maps = categoryMaps(input)
 
-            result += CategoryMap(source, destination, ranges)
+        val locationNumbers = Task1.convertSeedNumbersToLocationNumbers(seeds, maps)
+
+        return locationNumbers.min()
+    }
+
+    private fun seedRanges(input: String): List<LongRange> {
+        val ranges = input
+            .lines()
+            .first()
+            .substringAfter(": ")
+            .split(" ")
+
+        val result = mutableListOf<LongRange>()
+
+        for (i in ranges.indices step 2) {
+            val start = ranges[i].toLong()
+            val length = ranges[i + 1].toLong()
+
+            result += start..<start + length
         }
 
         return result
     }
+}
 
-    private fun ranges(input: String): List<CategoryRange> {
-        return input
-            .lines()
-            .drop(1)
-            .map { CategoryRange(it.split(" ")[1].toLong(), it.split(" ")[0].toLong(), it.split(" ")[2].toLong()) }
+private fun categoryMaps(input: String): List<CategoryMap> {
+    val result = mutableListOf<CategoryMap>()
+    val maps = input.split("\n\n").drop(1)
+
+    for (map in maps) {
+        val source = Category.from(map.lines().first().substringBefore("-to"))
+        val destination = Category.from(map.lines().first().substringAfter("to-").substringBefore(" "))
+        val ranges = ranges(map)
+
+        result += CategoryMap(source, destination, ranges)
     }
+
+    return result
+}
+
+private fun ranges(input: String): List<CategoryRange> {
+    return input
+        .lines()
+        .drop(1)
+        .map { CategoryRange(it.split(" ")[1].toLong(), it.split(" ")[0].toLong(), it.split(" ")[2].toLong()) }
 }

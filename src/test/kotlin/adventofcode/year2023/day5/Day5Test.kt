@@ -11,9 +11,9 @@ class Day5Test {
         println("2023 Day 5 Task 1: ${Task1.lowestLocationNumber(input)}")
     }
 
-//    @Test
-//    fun testDay5Task2() {
-//        val input = FileReader.getResource("year2023/day5.txt")
-//        println("2023 Day 5 Task 2: ${Task2.totalCards(input)}")
-//    }
+    @Test
+    fun testDay5Task2() {
+        val input = FileReader.getResource("year2023/day5.txt")
+        println("2023 Day 5 Task 2: ${Task2.lowestLocationNumber(input)}")
+    }
 }

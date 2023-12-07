@@ -32,10 +32,13 @@ enum class Type(val value: Int) {
 
 data class Hand(val cards: List<Card>, val bid: Int) {
 
-    fun beats(otherHand: Hand): Boolean {
-        return if (type() == otherHand.type()) {
-            val values = cards.map { it.value }
-            val otherValues = otherHand.cards.map { it.value }
+    fun beats(otherHand: Hand, treatJAsJokers: Boolean): Boolean {
+        val type = type(treatJAsJokers)
+        val otherType = otherHand.type(treatJAsJokers)
+
+        return if (type == otherType) {
+            val values = cards.toValues(treatJAsJokers)
+            val otherValues = otherHand.cards.toValues(treatJAsJokers)
 
             val pair = values
                 .zip(otherValues)
@@ -43,11 +46,19 @@ data class Hand(val cards: List<Card>, val bid: Int) {
 
             pair.first > pair.second
         } else {
-            type().beats(otherHand.type())
+            type.beats(otherType)
         }
     }
 
-    private fun type(): Type {
+    private fun type(treatJAsJokers: Boolean): Type {
+        return if (treatJAsJokers) {
+            typeWithJokers()
+        } else {
+            typeWithoutJokers()
+        }
+    }
+
+    private fun typeWithoutJokers(): Type {
         return when {
             isFiveOfAKind() -> Type.FiveOfAKind
             isFourOfAKind() -> Type.FourOfAKind
@@ -56,6 +67,54 @@ data class Hand(val cards: List<Card>, val bid: Int) {
             isTwoPair() -> Type.TwoPair
             isOnePair() -> Type.OnePair
             else -> Type.HighCard
+        }
+    }
+
+    private fun typeWithJokers(): Type {
+        return when (val numberOfJokers = numberOfJokers()) {
+            5, 4 -> {
+                Type.FiveOfAKind
+            }
+
+            3 -> {
+                if (isOnePair()) {
+                    Type.FiveOfAKind
+                } else {
+                    Type.FourOfAKind
+                }
+            }
+
+            2 -> {
+                if (isThreeOfAKind()) {
+                    Type.FiveOfAKind
+                } else if (isTwoPair()) {
+                    Type.FourOfAKind
+                } else {
+                    Type.ThreeOfAKind
+                }
+            }
+
+            1 -> {
+                if (isFourOfAKind()) {
+                    Type.FiveOfAKind
+                } else if (isThreeOfAKind()) {
+                    Type.FourOfAKind
+                } else if (isTwoPair()) {
+                    Type.FullHouse
+                } else if (isOnePair()) {
+                    Type.ThreeOfAKind
+                } else {
+                    Type.OnePair
+                }
+            }
+
+            0 -> {
+                typeWithoutJokers()
+            }
+
+            else -> {
+                throw IllegalArgumentException("Unexpected number of jokers: $numberOfJokers")
+            }
         }
     }
 
@@ -86,25 +145,50 @@ data class Hand(val cards: List<Card>, val bid: Int) {
     private fun groupedCards(): Map<Card, Int> {
         return cards.groupingBy { it }.eachCount()
     }
+
+    private fun numberOfJokers(): Int {
+        return cards.count { it == Card.Jack }
+    }
+
+    private fun List<Card>.toValues(treatJAsJokers: Boolean): List<Int> {
+        return map { it.value }.map { if (treatJAsJokers) replaceJackWithLowestValue(it) else it }
+    }
+
+    private fun replaceJackWithLowestValue(value: Int): Int {
+        return if (value == Card.Jack.value) Card.Deuce.value - 1 else value
+    }
 }
 
-val handComparator = Comparator<Hand> { hand1, hand2 ->
-    return@Comparator if (hand1.beats(hand2)) 1 else -1
+class HandComparator(private val treatJAsJokers: Boolean) : Comparator<Hand> {
+
+    override fun compare(hand1: Hand, hand2: Hand): Int {
+        return if (hand1.beats(hand2, treatJAsJokers)) 1 else -1
+    }
 }
 
 object Task1 {
     fun totalWinnings(input: String): Int {
-        return input
-            .lines()
-            .map {
-                it.toHand()
-            }
-            .sortedWith(handComparator)
-            .mapIndexed { index, hand ->
-                (index + 1) * hand.bid
-            }
-            .sum()
+        return totalWinnings(input, treatJAsJokers = false)
     }
+}
+
+object Task2 {
+    fun totalWinnings(input: String): Int {
+        return totalWinnings(input, treatJAsJokers = true)
+    }
+}
+
+private fun totalWinnings(input: String, treatJAsJokers: Boolean): Int {
+    return input
+        .lines()
+        .map {
+            it.toHand()
+        }
+        .sortedWith(HandComparator(treatJAsJokers))
+        .mapIndexed { index, hand ->
+            (index + 1) * hand.bid
+        }
+        .sum()
 }
 
 private fun String.toHand(): Hand {

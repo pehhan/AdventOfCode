@@ -15,28 +15,79 @@ object Task1 {
 
         return steps(instructions, nodeMap)
     }
+}
 
-    private fun steps(instructions: List<Instruction>, nodeMap: NodeMap): Int {
-        var steps = 0
-        var instructionIndex = 0
-        var node = "AAA"
-        val endNode = "ZZZ"
+object Task2 {
+    fun steps(input: String): Long {
+        val instructions = input.toInstructions()
+        val nodeMap = input.toNodeMap()
 
-        while (node != endNode) {
-            val instruction = instructions[instructionIndex]
+        val startNodes = nodeMap.map { it.key }.filter { it.last() == 'A' }
+
+        println(startNodes)
+
+        return steps(instructions, nodeMap, startNodes)
+    }
+}
+
+private fun steps(instructions: List<Instruction>, nodeMap: NodeMap): Int {
+    var steps = 0
+    var instructionIndex = 0
+    var node = "AAA"
+    val endNode = "ZZZ"
+
+    while (node != endNode) {
+        val instruction = instructions[instructionIndex]
+        val map = nodeMap[node] ?: break
+
+        node = when (instruction) {
+            Instruction.Left -> map.first
+            Instruction.Right -> map.second
+        }
+
+        instructionIndex = (instructionIndex + 1) % instructions.size
+        steps++
+    }
+
+    return steps
+}
+
+private fun steps(instructions: List<Instruction>, nodeMap: NodeMap, startNodes: List<Node>): Long {
+    var steps = 0L
+    var instructionIndex = 0
+    var nodes = startNodes.toMutableList()
+
+    while (!nodes.areAllNodesEndNodes()) {
+        val instruction = instructions[instructionIndex]
+        val newNodes = mutableListOf<Node>()
+
+        for (node in nodes) {
             val map = nodeMap[node] ?: break
 
-            node = when (instruction) {
+            val newNode = when (instruction) {
                 Instruction.Left -> map.first
                 Instruction.Right -> map.second
             }
 
-            instructionIndex = (instructionIndex + 1) % instructions.size
-            steps++
+            newNodes += newNode
         }
 
-        return steps
+        nodes = newNodes
+
+        instructionIndex = (instructionIndex + 1) % instructions.size
+        steps++
+
+        if (steps % 10_0000_000 == 0L) {
+            println(nodes)
+            println(steps)
+        }
     }
+
+    return steps
+}
+
+private fun List<Node>.areAllNodesEndNodes(): Boolean {
+    return this.all { it.last() == 'Z' }
 }
 
 private fun String.toInstructions(): List<Instruction> {

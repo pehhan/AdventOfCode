@@ -1,5 +1,6 @@
 package adventofcode.year2024.day1
 
+import adventofcode.year2021.day14.result
 import kotlin.math.abs
 
 object Task1 {
@@ -11,19 +12,30 @@ object Task1 {
             abs(a - b)
         }.sum()
     }
+}
 
-    private fun sortedColumn(input: String, index: Int): List<Int> {
-        return input
-            .lines()
-            .map {
-                it.split("\\s+".toRegex())
-            }
-            .map {
-                it[index]
-            }
-            .map {
-                it.toInt()
-            }
-            .sorted()
+object Task2 {
+    fun similarity(input: String): Int {
+        val left = sortedColumn(input, index = 0)
+        val right = sortedColumn(input, index = 1)
+
+        return left.fold(0) { result, number ->
+            result + number * right.count { it == number }
+        }
     }
+}
+
+private fun sortedColumn(input: String, index: Int): List<Int> {
+    return input
+        .lines()
+        .map {
+            it.split("\\s+".toRegex())
+        }
+        .map {
+            it[index]
+        }
+        .map {
+            it.toInt()
+        }
+        .sorted()
 }

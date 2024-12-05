@@ -10,4 +10,10 @@ class Day1Test {
         val input = FileReader.getResource("year2024/day1.txt")
         println("2024 Day 1 Task 1: ${Task1.distance(input)}")
     }
+
+    @Test
+    fun testDay1Task2() {
+        val input = FileReader.getResource("year2024/day1.txt")
+        println("2024 Day 1 Task 2: ${Task2.similarity(input)}")
+    }
 }

@@ -11,9 +11,9 @@ class Day3Test {
         println("2024 Day 3 Task 1: ${Task1.result(input)}")
     }
 
-//    @Test
-//    fun testDay3Task2() {
-//        val input = FileReader.getResource("year2024/day3.txt")
-//        println("2024 Day 3 Task 2: ${Task2.result(input)}")
-//    }
+    @Test
+    fun testDay3Task2() {
+        val input = FileReader.getResource("year2024/day3.txt")
+        println("2024 Day 3 Task 2: ${Task2.result(input)}")
+    }
 }

@@ -1,6 +1,5 @@
 package adventofcode.year2024.day1
 
-import adventofcode.year2021.day14.result
 import kotlin.math.abs
 
 object Task1 {
